@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 素材生成自动化脚本 (基于 doudou-image-jasperio)
+ * 素材生成自动化脚本 (基于生图工具 CLI)
  * 当白板动画需要实物贴图、免抠手写笔、纸张纹理时，一键调度 CloseAI gpt-image-2 模型生成。
  */
 
@@ -54,7 +54,7 @@ export async function runGenerate(assetKey = 'pencil') {
     process.exit(1);
   }
 
-  console.log(`[doudou-remotion-whiteboard] 正在调用 doudou-image-jasperio 生成素材 [${assetKey}]...`);
+  console.log(`[doudou-remotion-whiteboard] 正在调用生图工具生成素材 [${assetKey}]...`);
   console.log(`提示词: ${target.prompt}`);
 
   const args = [

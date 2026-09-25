@@ -7,7 +7,7 @@ export interface PencilFollowerProps {
   scale?: number;         // 缩放比例（默认 1）
   opacity?: number;       // 透明度
   showShadow?: boolean;   // 是否渲染柔和落笔投影
-  customImageUrl?: string;// 可选：使用由 doudou-image-jasperio 生成的实物手写笔免抠图
+  customImageUrl?: string;// 可选：使用由 生图工具 生成的实物手写笔免抠图
   pencilType?: 'pencil' | 'marker' | 'chalk';
 }
 

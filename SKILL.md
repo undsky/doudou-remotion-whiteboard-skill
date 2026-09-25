@@ -1,6 +1,6 @@
 ---
 name: doudou-remotion-whiteboard
-description: Remotion 通用手绘白板与纸质动态动画引擎（Whiteboard & Hand-Drawn Motion Graphics）。支持白板马克笔/铅笔/粉笔/钢笔真实运笔跟随与抬笔落笔动力学、手绘几何图形与架构图箭头生长、素描排线阴影 (Cross-Hatch)、手写文本逐字显现、手绘齿轮机械联动、3D纸雕立体折叠、工程蓝图与黑板粉笔推导。适用于科技科普、产品解说、架构演进、课程教学、思维导图与商业白板视频。支持通过 /doudou-image-jasperio 自动化生成实物免抠笔刷与特定纸质纹理底图。
+description: Remotion 通用手绘白板与纸质动态动画引擎（Whiteboard & Hand-Drawn Motion Graphics）。支持白板马克笔/铅笔/粉笔/钢笔真实运笔跟随与抬笔落笔动力学、手绘几何图形与架构图箭头生长、素描排线阴影 (Cross-Hatch)、手写文本逐字显现、手绘齿轮机械联动、3D纸雕立体折叠、工程蓝图与黑板粉笔推导。适用于科技科普、产品解说、架构演进、课程教学、思维导图与商业白板视频。支持通过生图工具自动化生成实物免抠笔刷与特定纸质纹理底图。
 ---
 
 # doudou-remotion-whiteboard: Remotion 通用白板与手绘动画引擎
@@ -36,7 +36,7 @@ description: Remotion 通用手绘白板与纸质动态动画引擎（Whiteboard
   - `pencil`：高精度黑漆木质美术铅笔（纯矢量代码渲染，零资源依赖）
   - `marker`：粗头商务白板马克笔
   - `chalk`：带有颗粒断续感的粉笔头
-  - `custom`：支持传入由 `/doudou-image-jasperio` 自动化生成的实物免抠手写笔或人手免抠图
+  - `custom`：支持传入由生图工具生成的实物免抠手写笔或人手免抠图
 
 ### 2. 手绘几何图形与架构图连接器 (`HandDrawnShapes`)
 参数化手绘几何组件，赋予规整图形手工绘制的微小抖动与粗糙度：
@@ -122,9 +122,9 @@ export const ArchitectureScene: React.FC = () => {
 
 ---
 
-## 四、 与 `/doudou-image-jasperio` 的素材扩展机制
+## 四、 与生图工具的素材扩展机制
 
-技能全面支持纯代码原生渲染（无外部依赖）。当视频需要**高拟物实物免抠贴图**或**特定定制质感底纹**时，支持通过 `/doudou-image-jasperio` 生成扩展：
+技能全面支持纯代码原生渲染（无外部依赖）。当视频需要**高拟物实物免抠贴图**或**特定定制质感底纹**时，支持调用生图工具（如环境支持的文生图/图生图技能）生成扩展素材：
 
 ```bash
 # 1. 生成真实手持铅笔免抠素材 (锁死笔尖朝向)
