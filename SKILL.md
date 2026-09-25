@@ -124,18 +124,11 @@ export const ArchitectureScene: React.FC = () => {
 
 ## 四、 与生图工具的素材扩展机制
 
-技能全面支持纯代码原生渲染（无外部依赖）。当视频需要**高拟物实物免抠贴图**或**特定定制质感底纹**时，支持调用生图工具（如环境支持的文生图/图生图技能）生成扩展素材：
+技能全面支持纯代码原生渲染（零外部依赖）。当视频需要**高拟物实物免抠贴图**或**特定定制质感底纹**时，可直接调用当前环境的生图工具生成素材并引入使用：
 
-```bash
-# 1. 生成真实手持铅笔免抠素材 (锁死笔尖朝向)
-node scripts/generate-assets.mjs pencil
-
-# 2. 生成复古水彩无缝纸张纹理
-node scripts/generate-assets.mjs vintagePaper
-
-# 3. 生成拟物机械工具/怀表素材
-node scripts/generate-assets.mjs pocketWatch
-```
+- **真实美术铅笔/白板笔免抠图**：提示词建议包含 `angled at 45 degrees, sharp tip pointed at top-left, clean cutout, isolated on pure white/transparent background, high resolution`，生成后传给 `<PencilFollower customImageUrl="..." />`；
+- **复古糙纸/牛皮纸纹理底图**：提示词建议包含 `Seamless vintage watercolor sketchbook paper texture, warm creamy beige, subtle fibers and natural paper grain, top-down flat lay`，作为背景层贴图；
+- **拟物工具/机械物件**：提示词建议包含 `vintage mechanical pocket watch / tools, clean studio lighting, isolated on transparent background`。
 
 ---
 
