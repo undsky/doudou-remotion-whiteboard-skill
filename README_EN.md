@@ -7,7 +7,7 @@
 A universal **hand-drawn whiteboard, paper media, and sketch animation engine** tailored for Remotion.
 
 <p align="center">
-  <video src="./whiteboard_demo.mp4" controls width="100%" autoplay loop muted playsinline></video>
+  <img src="./whiteboard_demo.gif" alt="Doudou Remotion Whiteboard Demo" width="100%" />
 </p>
 
 ---

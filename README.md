@@ -7,7 +7,7 @@
 专为 Remotion 打造的**通用手绘白板、纸质媒介与草图动效（Whiteboard & Hand-Drawn Animation）引擎**。
 
 <p align="center">
-  <video src="./whiteboard_demo.mp4" controls width="100%" autoplay loop muted playsinline></video>
+  <img src="./whiteboard_demo.gif" alt="豆豆 Remotion 白板动画演示" width="100%" />
 </p>
 
 ---
