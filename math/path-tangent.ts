@@ -31,6 +31,15 @@ export function getSampledTangent(
     };
   }
 
+  if (points.length === 1) {
+    return {
+      point: { ...points[0] },
+      tangent: { x: 1, y: 0 },
+      angleRad: 0,
+      angleDeg: 0,
+    };
+  }
+
   const clampedProgress = Math.max(0, Math.min(1, progress));
   const totalSegments = points.length - 1;
   const targetIndex = clampedProgress * totalSegments;

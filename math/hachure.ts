@@ -30,6 +30,9 @@ export function generateHachureLines(
     crossHatch = false,
   } = options;
 
+  // 防御性校验，避免 gap <= 0 导致死循环
+  const safeGap = Math.max(1, gap);
+
   const lines: LineSegment[] = [];
   const angles = crossHatch ? [angleDeg, angleDeg + 90] : [angleDeg];
 
@@ -46,7 +49,7 @@ export function generateHachureLines(
 
     // 扫描线沿垂直方向步进
     const halfDiag = diagonal / 2;
-    for (let offset = -halfDiag; offset <= halfDiag; offset += gap) {
+    for (let offset = -halfDiag; offset <= halfDiag; offset += safeGap) {
       // 局部未旋转空间：水平穿过的线段
       const lx1 = -halfDiag;
       const ly1 = offset;
