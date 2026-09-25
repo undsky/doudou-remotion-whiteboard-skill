@@ -7,13 +7,18 @@ export interface PencilFollowerProps {
   scale?: number;         // 缩放比例（默认 1）
   opacity?: number;       // 透明度
   showShadow?: boolean;   // 是否渲染柔和落笔投影
-  customImageUrl?: string;// 可选：使用由 生图工具 生成的实物手写笔免抠图
+  isDrawing?: boolean;    // 是否处于落笔状态
+  liftHeight?: number;    // 空中抬笔悬停高度 (px, 0 为贴合板面)
+  customImageUrl?: string;// 可选：使用实物手写笔免抠图
   pencilType?: 'pencil' | 'marker' | 'chalk';
 }
 
 /**
  * PencilFollower 真实铅笔/笔刷跟随器
- * 核心设计：坐标原点 (0, 0) 精确锁死在笔尖，不论怎么旋转与缩放，笔尖永远准确接触落笔点！
+ * 核心设计：
+ * 1. 坐标原点 (0, 0) 精确锁死在笔尖，不论怎么旋转与缩放，笔尖永远准确接触落笔点！
+ * 2. 防变形保护：强制 maxWidth: 'none' 与 minWidth/minHeight，彻底免疫 Tailwind 等 CSS Preflight 的挤压变形
+ * 3. 3D 深度投影：根据 liftHeight 动态扩散虚化，纯帧驱动，绝无 CSS Transition
  */
 export const PencilFollower: React.FC<PencilFollowerProps> = ({
   x,
@@ -22,36 +27,51 @@ export const PencilFollower: React.FC<PencilFollowerProps> = ({
   scale = 1,
   opacity = 1,
   showShadow = true,
+  isDrawing = true,
+  liftHeight,
   customImageUrl,
   pencilType = 'pencil',
 }) => {
   if (opacity <= 0) return null;
+
+  // 1. 精确悬空高度计算 (默认落笔为 0，抬笔为 16px)
+  const effectiveLift = liftHeight !== undefined
+    ? Math.max(0, liftHeight)
+    : (isDrawing ? 0 : 16);
+
+  // 2. 笔尖仰角动态 (抬起时笔尖因手腕上扬自然轻微上扬)
+  const pitchUpAngle = effectiveLift > 0 ? Math.min(6.5, effectiveLift * 0.32) : 0;
+  const dynamicAngle = angleDeg + pitchUpAngle;
+
+  // 3. 动态物理投影随高度扩散
+  const shadowBlur = Math.round(10 + effectiveLift * 0.8);
+  const shadowOffsetY = Math.round(25 + effectiveLift * 1.1);
+  const shadowOpacity = Math.max(0.04, 0.16 - effectiveLift * 0.004);
 
   return (
     <div
       style={{
         position: 'absolute',
         left: x,
-        top: y,
-        transform: `rotate(${angleDeg}deg) scale(${scale})`,
-        transformOrigin: '0px 0px', // 关键：锚点设在笔尖
+        top: y - effectiveLift,
+        transform: `rotate(${dynamicAngle}deg) scale(${scale})`,
+        transformOrigin: '0px 0px', // 关键：锚点设在笔尖 (0, 0)
         pointerEvents: 'none',
         opacity,
         zIndex: 9999,
-        transition: 'transform 0.04s linear',
       }}
     >
-      {/* 1. 柔和落笔动态环境阴影 */}
+      {/* 1. 柔和落笔动态环境阴影 (随高度自适应扩散) */}
       {showShadow && (
         <div
           style={{
             position: 'absolute',
             left: 20,
-            top: 25,
+            top: shadowOffsetY,
             width: 14,
             height: 240,
-            background: 'rgba(0, 0, 0, 0.14)',
-            filter: 'blur(10px)',
+            background: `rgba(0, 0, 0, ${shadowOpacity.toFixed(3)})`,
+            filter: `blur(${shadowBlur}px)`,
             borderRadius: '10px',
             transform: 'rotate(15deg) skewX(-10deg)',
             transformOrigin: 'top left',
@@ -59,7 +79,7 @@ export const PencilFollower: React.FC<PencilFollowerProps> = ({
         />
       )}
 
-      {/* 2. 模式 A: 自定义实物免抠图片素材 */}
+      {/* 2. 模式 A: 自定义实物免抠图片素材 (严格防拉伸变形) */}
       {customImageUrl ? (
         <img
           src={customImageUrl}
@@ -70,8 +90,12 @@ export const PencilFollower: React.FC<PencilFollowerProps> = ({
             top: 0,
             width: 'auto',
             height: 260,
+            minWidth: 40,
+            maxWidth: 'none',
+            maxHeight: 'none',
             objectFit: 'contain',
             transformOrigin: '0 0',
+            display: 'block',
           }}
         />
       ) : (

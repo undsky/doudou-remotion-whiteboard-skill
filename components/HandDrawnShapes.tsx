@@ -1,6 +1,5 @@
 import React from 'react';
 import { interpolate, useCurrentFrame } from 'remotion';
-import { getHandJitter } from '../math/hand-jitter';
 
 export interface HandDrawnArrowProps {
   x1: number;
@@ -16,6 +15,7 @@ export interface HandDrawnArrowProps {
 
 /**
  * 手绘动态箭头连接线
+ * 顺滑贝塞尔主弧线 + 箭头尖端两翼分步显现（配合真实运笔节奏）
  */
 export const HandDrawnArrow: React.FC<HandDrawnArrowProps> = ({
   x1,
@@ -23,7 +23,7 @@ export const HandDrawnArrow: React.FC<HandDrawnArrowProps> = ({
   x2,
   y2,
   startFrame = 0,
-  durationFrames = 30,
+  durationFrames = 35,
   color = '#2b2621',
   strokeWidth = 2.5,
   curvature = 0,
@@ -43,7 +43,7 @@ export const HandDrawnArrow: React.FC<HandDrawnArrowProps> = ({
   const mx = (x1 + x2) / 2 - (y2 - y1) * curvature;
   const my = (y1 + y2) / 2 + (x2 - x1) * curvature;
 
-  // 根据进度生成采样点
+  // 根据进度生成采样点（平滑贝塞尔，无机械锯齿）
   const steps = 30;
   const currentSteps = Math.floor(steps * progress);
   const points: { x: number; y: number }[] = [];
@@ -53,9 +53,7 @@ export const HandDrawnArrow: React.FC<HandDrawnArrowProps> = ({
     // 二阶贝塞尔
     const bx = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * mx + t * t * x2;
     const by = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * my + t * t * y2;
-
-    const jitter = getHandJitter(i, 1.2, 0.4, 7);
-    points.push({ x: bx + jitter.dx, y: by + jitter.dy });
+    points.push({ x: bx, y: by });
   }
 
   if (points.length < 2) return null;
@@ -76,9 +74,20 @@ export const HandDrawnArrow: React.FC<HandDrawnArrowProps> = ({
   return (
     <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
       <path d={d} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
-      {progress > 0.8 && (
+      {/* 箭头尖端两翼分步渲染：先撇上翼，再撇下翼，配合人手运笔真实节奏 */}
+      {frame >= startFrame + durationFrames - 7 && (
         <path
-          d={`M ${a1x} ${a1y} L ${last.x} ${last.y} L ${a2x} ${a2y}`}
+          d={`M ${a1x} ${a1y} L ${last.x} ${last.y}`}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+      {frame >= startFrame + durationFrames - 3 && (
+        <path
+          d={`M ${last.x} ${last.y} L ${a2x} ${a2y}`}
           fill="none"
           stroke={color}
           strokeWidth={strokeWidth}
@@ -103,6 +112,7 @@ export interface CircleHighlightProps {
 
 /**
  * 手绘椭圆划圈划重点组件
+ * 平滑无抖动，笔触紧密贴合笔尖轨迹
  */
 export const CircleHighlight: React.FC<CircleHighlightProps> = ({
   x,
@@ -131,10 +141,9 @@ export const CircleHighlight: React.FC<CircleHighlightProps> = ({
 
   for (let i = 0; i <= curSteps; i++) {
     const a = (i / steps) * Math.PI * 2.15;
-    const jitter = getHandJitter(i * 2, 1.5, 0.4, 25);
     points.push({
-      x: x + (rx + jitter.dx) * Math.cos(a),
-      y: y + (ry + jitter.dy) * Math.sin(a),
+      x: x + rx * Math.cos(a),
+      y: y + ry * Math.sin(a),
     });
   }
 
