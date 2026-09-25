@@ -3,3 +3,4 @@ export * from './PencilFollower';
 export * from './BlueprintGrid';
 export * from './HandwrittenText';
 export * from './MechanicalGears';
+export * from './HandDrawnShapes';
