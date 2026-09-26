@@ -10,7 +10,8 @@ export interface HandDrawnCanvasProps {
 
 /**
  * HandDrawnCanvas 手绘专用 Canvas 2D 渲染容器
- * 内部自动处理 Retina 2x/3x 高清设备像素比 (devicePixelRatio)，杜绝模糊
+ * canvas 的像素尺寸直接锁定为合成分辨率 (useVideoConfig 的 width/height)，
+ * 与 Remotion 出图分辨率 1:1 对应，无需 devicePixelRatio 缩放即可保证清晰。
  */
 export const HandDrawnCanvas: React.FC<HandDrawnCanvasProps> = ({
   onDraw,

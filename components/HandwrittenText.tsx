@@ -1,5 +1,5 @@
 import React from 'react';
-import { interpolate, useCurrentFrame } from 'remotion';
+import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 
 export interface HandwrittenTextProps {
   text: string;
@@ -26,6 +26,7 @@ export const HandwrittenText: React.FC<HandwrittenTextProps> = ({
   style,
 }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
 
   if (frame < startFrame) return null;
 
@@ -38,6 +39,10 @@ export const HandwrittenText: React.FC<HandwrittenTextProps> = ({
 
   const visibleLength = Math.floor(progress * text.length);
   const currentText = text.slice(0, visibleLength);
+
+  // 逐帧驱动的光标闪烁（约 0.6s 一个周期），避免依赖不确定的 CSS animation
+  const blinkPeriod = Math.max(1, Math.round(fps * 0.6));
+  const cursorVisible = (frame - startFrame) % blinkPeriod < blinkPeriod / 2;
 
   return (
     <div
@@ -63,7 +68,7 @@ export const HandwrittenText: React.FC<HandwrittenTextProps> = ({
             backgroundColor: color,
             marginLeft: 2,
             verticalAlign: 'middle',
-            animation: 'blink 0.6s infinite',
+            opacity: cursorVisible ? 1 : 0,
           }}
         />
       )}

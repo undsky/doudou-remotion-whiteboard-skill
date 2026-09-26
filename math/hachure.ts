@@ -3,6 +3,8 @@
  * 针对矩形或多边形区域生成均匀/自然的斜线条与交叉排线阴影
  */
 
+import { getHandJitter } from './hand-jitter';
+
 export interface LineSegment {
   x1: number;
   y1: number;
@@ -28,6 +30,7 @@ export function generateHachureLines(
     angleDeg = -45,
     gap = 8,
     crossHatch = false,
+    jitterAmp = 1.0,
   } = options;
 
   // 防御性校验，避免 gap <= 0 导致死循环
@@ -42,7 +45,8 @@ export function generateHachureLines(
   const cy = bounds.minY + height / 2;
   const diagonal = Math.hypot(width, height);
 
-  for (const angle of angles) {
+  for (let angleIdx = 0; angleIdx < angles.length; angleIdx++) {
+    const angle = angles[angleIdx];
     const rad = (angle * Math.PI) / 180;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
@@ -62,7 +66,20 @@ export function generateHachureLines(
       const x2 = cx + (lx2 * cos - ly2 * sin);
       const y2 = cy + (lx2 * sin + ly2 * cos);
 
-      lines.push({ x1, y1, x2, y2 });
+      // 对两端点施加手绘微颤，使排线摆脱机械笔直感（jitterAmp 为 0 时保持纯直线）
+      if (jitterAmp > 0) {
+        const seedBase = 7 + angleIdx * 37;
+        const j1 = getHandJitter(offset, jitterAmp, 0.3, seedBase);
+        const j2 = getHandJitter(offset + 100, jitterAmp, 0.3, seedBase);
+        lines.push({
+          x1: x1 + j1.dx,
+          y1: y1 + j1.dy,
+          x2: x2 + j2.dx,
+          y2: y2 + j2.dy,
+        });
+      } else {
+        lines.push({ x1, y1, x2, y2 });
+      }
     }
   }
 
