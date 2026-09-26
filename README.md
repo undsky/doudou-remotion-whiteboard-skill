@@ -34,7 +34,7 @@
 在任何目标工程根目录下，通过命令行一键安装：
 
 ```bash
-npx skills add undsky/doudou-remotion-whiteboard --yes
+npx skills add undsky/doudou-remotion-whiteboard-skill --yes
 ```
 
 ---

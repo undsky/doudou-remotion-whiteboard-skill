@@ -34,7 +34,7 @@ This skill library acts as a **hand-drawn whiteboard motion graphics engine for 
 Install with a single command in any target project root directory:
 
 ```bash
-npx skills add undsky/doudou-remotion-whiteboard --yes
+npx skills add undsky/doudou-remotion-whiteboard-skill --yes
 ```
 
 ---
@@ -60,20 +60,20 @@ You can prompt AI Agents directly in natural language to generate whiteboard ani
 
 ## 🎨 Core Capabilities
 
-| Core Module | Key Features & Applications |
-|---|---|
-| **Physical Brush & Real Hand Following** | Pen tip anchor alignment (0, 0), smooth tangential turning, lift/press height dynamics (`liftHeight`), 3D depth shadow diffusion |
-| **Hand-Drawn Shapes & Connectors** | Parametric micro-jitter, rectangles/circles/stars, dual-wing hand-drawn arrows, circle highlights, and scratch-out erasers |
-| **Sketch Shading & Cross-Hatch Fill** | Simulates polygon scanline algorithms, supporting single-direction hachure and cross-hatch shading for authentic sketch textures |
-| **Handwritten Text & Character Streaming** | Stroke-by-stroke transparency bleeding, real-time feedback of streaming coordinates for pen tip hovering and writing |
+| Core Module                                 | Key Features & Applications                                                                                                                                       |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Physical Brush & Real Hand Following**    | Pen tip anchor alignment (0, 0), smooth tangential turning, lift/press height dynamics (`liftHeight`), 3D depth shadow diffusion                                  |
+| **Hand-Drawn Shapes & Connectors**          | Parametric micro-jitter, rectangles/circles/stars, dual-wing hand-drawn arrows, circle highlights, and scratch-out erasers                                        |
+| **Sketch Shading & Cross-Hatch Fill**       | Simulates polygon scanline algorithms, supporting single-direction hachure and cross-hatch shading for authentic sketch textures                                  |
+| **Handwritten Text & Character Streaming**  | Stroke-by-stroke transparency bleeding, real-time feedback of streaming coordinates for pen tip hovering and writing                                              |
 | **Multi-Texture Paper & Canvas Containers** | Built-in creamy sketch paper (`sketch`), engineering blueprint grid (`blueprint`), textured blackboard (`chalkboard`), kraft paper (`kraft`), and pure whiteboard |
 
 ---
 
 ## 💬 Community & Support
 
-| Official Account (WeChat) | QQ Group |
-|:---:|:---:|
+|                   Official Account (WeChat)                   |                     QQ Group                      |
+| :-----------------------------------------------------------: | :-----------------------------------------------: |
 | ![WeChat Official Account](https://cdn.undsky.com/img/gh.jpg) | ![QQ Group](https://cdn.undsky.com/img/qqqun.jpg) |
 
 ---
